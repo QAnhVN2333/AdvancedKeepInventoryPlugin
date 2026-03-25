@@ -1,0 +1,29 @@
+name: AdvancedKeepInventory
+version: '2.1.0'
+main: com.lyrinth.AdvancedKeepInventory
+api-version: '1.16'
+description: Advanced death management plugin with keep inventory, economy penalties, and anti-abuse system.
+author: Lyrinth
+
+# Soft-depend: Plugin hoạt động bình thường kể cả khi không có các plugin này
+softdepend:
+  - Vault
+  - PlayerPoints
+
+commands:
+  advancedkeepinventory:
+    description: Main command for AdvancedKeepInventory
+    usage: /advancedkeepinventory reload
+    aliases:
+      - aki
+
+permissions:
+  advancedkeepinventory.admin:
+    description: Permission to use admin commands (reload)
+    default: op
+  advancedkeepinventory.death.keep.bypass:
+    description: Never drop items on death (VIP/Staff)
+    default: false
+  advancedkeepinventory.death.money.bypass:
+    description: Never lose money on death (VIP/Staff)
+    default: false

@@ -1,0 +1,115 @@
+# ============================================================
+# AdvancedKeepInventory - Messages
+# MiniMessage supported: https://docs.advntr.dev/minimessage/format.html
+#
+# Placeholders:
+#   %killer%   -> Killer name
+#   %victim%   -> Victim name
+#   %money%    -> Money lost/stolen
+#   %percent%  -> EXP percent lost
+#   %label%    -> Command label (/aki or /advancedkeepinventory)
+#   %type%     -> Economy provider (Vault / PlayerPoints)
+# ============================================================
+
+version: 3 # Do not change this.
+
+
+# ============================================================
+# DISPLAY GUIDE
+# ============================================================
+#
+# Each message inside "death:" supports custom display type.
+#
+# ── Option 1: Simple string (always CHAT) ───────────────────
+#   victim-pvp: "<red>You were killed by %killer%."
+#
+# ── Option 2: Full block format ─────────────────────────────
+#   victim-pvp:
+#     text: "<red>You were killed by %killer%."
+#     display: chat        # chat | actionbar | title | bossbar
+#
+# ── TITLE Options ────────────────────────────────────────────
+#   victim-pvp:
+#     text: "<red>You died!"
+#     display: title
+#     subtitle: ""
+#     title-fade-in: 10
+#     title-stay: 40
+#     title-fade-out: 10
+# NOTE: Subtitle is not supported placeholders. Only static text.
+# ── BOSSBAR Options ──────────────────────────────────────────
+#   victim-pvp:
+#     text: "<red>You were killed by %killer%."
+#     display: bossbar
+#     bossbar-color: RED      # PINK | BLUE | RED | GREEN | YELLOW | PURPLE | WHITE
+#     bossbar-overlay: PROGRESS  # PROGRESS | NOTCHED_6 | NOTCHED_10 | NOTCHED_12 | NOTCHED_20
+#     bossbar-seconds: 5      # Auto hide after N seconds (0 = persistent)
+#
+# Default below is CHAT.
+# ============================================================
+
+
+# ============================================================
+# Death Messages
+# ============================================================
+
+death:
+
+  # PvP - Victim
+  victim-pvp:
+    text: "<gray>[<red>Death</red>]</gray> You were killed by <gold>%killer%</gold> and lost <red>%money%$</red>."
+    display: chat
+
+  # PvP - Killer (money stolen from victim)
+  killer-pvp:
+    text: "<gray>[<green>Kill</green>]</gray> You eliminated <gold>%victim%</gold> and stole <green>%money%$</green>."
+    display: chat
+
+  # Natural death (fall, void, fire, mob, etc.)
+  natural-death:
+    text: "<gray>[Death]</gray> You died and lost <red>%money%$</red>."
+    display: chat
+
+  # EXP loss
+  exp-loss:
+    text: "<gray>[EXP]</gray> You lost <yellow>%percent%%</yellow> experience."
+    display: chat
+
+  # [CRASH-SAFE] Items recovered after server crash/restart
+  items-recovered:
+    text: "<green>[AKI]</green> Your items from your last death have been recovered!"
+    display: chat
+
+
+# ============================================================
+# Command Messages (/aki)
+# ============================================================
+
+command:
+  usage: "<gray>[AKI]</gray> Usage: <yellow>/%label% reload"
+  invalid-subcommand: "<gray>[AKI]</gray> <red>Invalid subcommand.</red> Use: <yellow>/%label% reload"
+  no-permission: "<red>You do not have permission to use this command.</red>"
+  reload-success: "<green>[AKI]</green> Configuration reloaded successfully."
+
+
+# ============================================================
+# Plugin Lifecycle (Console only)
+# ============================================================
+
+plugin:
+  enabled: "[AdvancedKeepInventory] Plugin enabled successfully."
+  disabled: "[AdvancedKeepInventory] Plugin disabled."
+  command-register-fail: "[AdvancedKeepInventory] Failed to register command 'advancedkeepinventory'. Check plugin.yml."
+  reload-by: "[AdvancedKeepInventory] Configuration reloaded by %player%."
+
+
+# ============================================================
+# Economy (Console)
+# ============================================================
+
+economy:
+  vault-not-found: "[AdvancedKeepInventory] Vault not found. Economy feature disabled."
+  vault-no-provider: "[AdvancedKeepInventory] No Economy provider found via Vault. Economy feature disabled."
+  vault-connected: "[AdvancedKeepInventory] Connected to Vault Economy provider: %type%."
+  playerpoints-not-found: "[AdvancedKeepInventory] PlayerPoints not found. Points feature disabled."
+  playerpoints-connected: "[AdvancedKeepInventory] Connected to PlayerPoints API."

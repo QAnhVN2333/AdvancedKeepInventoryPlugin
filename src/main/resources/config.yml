@@ -1,0 +1,241 @@
+version: 3 # Do not change this.
+# Crash-safe: Player items on death are backed up to disk (death-cache/).
+#             Items will be recovered automatically after server restart.
+settings:
+  debug: false
+
+  anti-abuse:
+    enabled: true
+    cooldown-seconds: 60        # Killing the same player within this time will not reward money
+    check-ip: true              # Prevent farming money using alternate accounts on same IP
+    min-victim-balance: 10000   # Victim must have at least this balance for killer to receive money
+    rapid-death-protection: true # Prevent money/EXP loss when dying repeatedly within cooldown window
+                                 # Applies to ALL death types (PvP, Mob, Natural)
+                                 # Uses the same cooldown-seconds value above
+
+
+# ============================================================
+# World Configuration
+# ============================================================
+
+worlds:
+  world: # Name of the world
+    enabled: true
+
+    # If true: when admin enables /gamerule keepInventory true,
+    # plugin will respect Vanilla behavior.
+    # If false: plugin will always override Vanilla gamerule.
+    respect-vanilla-gamerule: true
+
+
+    # --------------------------------------------------------
+    # BLANKET KEEP RULES (Full Keep Conditions)
+    # --------------------------------------------------------
+    blanket-keep:
+      on-player-killed: false
+      on-mob-killed: false
+      on-natural-death: false
+      keep-equipped-armor: false   # Always keep equipped armor
+      keep-main-hand: false        # Always keep main-hand item
+
+
+    # =========================================================
+    # ITEM MANAGEMENT GUIDE (Drop / Keep)
+    # =========================================================
+    #
+    # There are 3 ways to define items. They can be combined.
+    #
+    # ---------------------------------------------------------
+    # 1. CATEGORIES
+    # ---------------------------------------------------------
+    # Items are automatically grouped based on material names.
+    # Just write the category name (case-insensitive).
+    #
+    # Valid categories:
+    #
+    #   Sword      → WOODEN_SWORD, STONE_SWORD, IRON_SWORD, DIAMOND_SWORD, ...
+    #   Armor      → *_HELMET, *_CHESTPLATE, *_LEGGINGS, *_BOOTS, SHIELD, ELYTRA
+    #   Pickaxe    → WOODEN_PICKAXE, IRON_PICKAXE, DIAMOND_PICKAXE, ...
+    #   Axe        → WOODEN_AXE, STONE_AXE, IRON_AXE, DIAMOND_AXE, ...
+    #   Shovel     → WOODEN_SHOVEL, STONE_SHOVEL, IRON_SHOVEL, ...
+    #   Hoe        → WOODEN_HOE, STONE_HOE, IRON_HOE, DIAMOND_HOE, ...
+    #   Bow        → BOW
+    #   Crossbow   → CROSSBOW
+    #   Trident    → TRIDENT
+    #   Food       → APPLE, BREAD, COOKED_BEEF, GOLDEN_APPLE, ... (isEdible)
+    #   Potion     → POTION, SPLASH_POTION, LINGERING_POTION
+    #   Misc       → All materials not included above
+    #   Does not support Spear yet. But you can put item-name in ITEMS section.
+    #
+    # Example: drop all swords and armor on death
+    #
+    #   categories:
+    #     - Sword
+    #     - Armor
+    #
+    # ---------------------------------------------------------
+    # 2. ITEMS (Specific Vanilla Materials)
+    # ---------------------------------------------------------
+    # Use exact Minecraft Material enum names (UPPERCASE with underscores).
+    # Full list:
+    # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+    #
+    # Example:
+    #
+    #   items:
+    #     - DIAMOND
+    #     - IRON_INGOT
+    #     - NETHERITE_INGOT
+    #     - ENDER_PEARL
+    #
+    # ---------------------------------------------------------
+    # 3. CUSTOM-ITEMS (Items from other plugins)
+    # ---------------------------------------------------------
+    # Used for items with CustomModelData.
+    #
+    # Format:  "MATERIAL:CustomModelData"
+    #
+    # Example:
+    #
+    #   custom-items:
+    #     - "PAPER:1001"
+    #     - "DIAMOND_SWORD:9999"
+    #
+    # ---------------------------------------------------------
+    # PRIORITY RULE
+    # ---------------------------------------------------------
+    # If an item matches both DROP and KEEP → KEEP always wins.
+    #
+    # Matching order (most specific first):
+    #   custom-items  >  items  >  categories
+    # =========================================================
+
+
+    # ---------------------------------------------------------
+    # INVENTORY CONTROL
+    # ---------------------------------------------------------
+    # Example: drop all food, potions,
+    # and custom item with CustomModelData 1001 on death. Keep everything else.
+    drop:
+      categories:
+        - Misc
+        - Food
+        - Potion
+      items:
+      custom-items:
+        - "PAPER:1001"
+
+    keep:
+      categories:
+      items:
+        #- NETHERITE_INGOT
+        #- NETHERITE_SPEAR
+      custom-items:
+        #- "PAPER:9999"
+
+
+    # ---------------------------------------------------------
+    # MONEY MANAGEMENT (Vault / PlayerPoints)
+    # ---------------------------------------------------------
+    money:
+      activate: true
+      type: Vault              # Vault or PlayerPoints
+      percent: 0.1             # Lose 10% of total balance
+      max-loss: 10000.0        # Maximum money loss
+      give-to-killer: true     # Transfer stolen money to killer (PvP only)
+
+
+    # ---------------------------------------------------------
+    # EXPERIENCE MANAGEMENT (EXP)
+    # ---------------------------------------------------------
+    exp:
+      activate: true
+      percent-loss: 0.5        # Lose 50% of current levels
+
+      # Apply EXP loss only for specific death causes
+      # Valid values:
+      #   PLAYER  → PvP
+      #   MOB     → PvE
+      #   NATURAL → Fall, lava, drowning, etc.
+      #
+      # If not defined → applies to all
+      apply-on:
+        - PLAYER
+        - MOB
+        - NATURAL
+
+  world_nether:
+    enabled: true
+    respect-vanilla-gamerule: true
+    blanket-keep:
+      on-player-killed: false
+      on-mob-killed: false
+      on-natural-death: false
+      keep-equipped-armor: false
+      keep-main-hand: false
+    drop:
+      categories:
+        - Misc
+        - Food
+        - Potion
+      items:
+      custom-items:
+        - "PAPER:1001"
+
+    keep:
+      categories:
+      items:
+      custom-items:
+
+    money:
+      activate: true
+      type: Vault
+      percent: 0.1
+      max-loss: 10000.0
+      give-to-killer: true
+
+    exp:
+      activate: true
+      percent-loss: 0.5
+      apply-on:
+        - PLAYER
+        - MOB
+        - NATURAL
+
+  world_the_end:
+    enabled: true
+    respect-vanilla-gamerule: true
+    blanket-keep:
+      on-player-killed: false
+      on-mob-killed: false
+      on-natural-death: false
+      keep-equipped-armor: false
+      keep-main-hand: false
+    drop:
+      categories:
+        - Misc
+        - Food
+        - Potion
+      items:
+      custom-items:
+        - "PAPER:1001"
+
+    keep:
+      categories:
+      items:
+      custom-items:
+
+    money:
+      activate: true
+      type: Vault #// PlayerPoints
+      percent: 0.1
+      max-loss: 10000.0
+      give-to-killer: true
+
+    exp:
+      activate: true
+      percent-loss: 0.5
+      apply-on:
+        - PLAYER
+        - MOB
+        - NATURAL
